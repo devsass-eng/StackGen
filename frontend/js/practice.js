@@ -114,7 +114,21 @@ const extraPracticeQuestions = {
     ['Events', 'Practical: Which method registers a click handler?', ['element.addEventListener("click", handler)', 'element.on("click", handler)', 'element.listenClick(handler)', 'element.clickHandler = true'], 0],
     ['Fetch API', 'What should you check on a fetch response before treating HTTP errors as failures?', ['response.ok', 'response.json is true', 'response.statusText only', 'request.ready'], 0],
     ['Promises', 'Which method handles a rejected promise?', ['catch()', 'thenError()', 'rejectWith()', 'finallyError()'], 0],
-    ['Error Handling', 'Practical: Which construct catches an exception from synchronous code?', ['try...catch', 'if...else', 'for...of', 'switch...case'], 0]
+    ['Error Handling', 'Practical: Which construct catches an exception from synchronous code?', ['try...catch', 'if...else', 'for...of', 'switch...case'], 0],
+    ['Conditions', 'What does an if statement do when its condition evaluates to true?', ['Runs its code block', 'Skips its code block', 'Stops the program', 'Converts the condition to text'], 0],
+    ['Conditions', 'Practical: What is logged by if (4 > 2) { console.log("yes"); }?', ['yes', 'no', 'true', 'Nothing'], 0],
+    ['Conditions', 'Which keyword provides an alternative branch when an if condition is false?', ['else', 'then', 'case', 'default'], 0],
+    ['Conditions', 'Practical: Which condition checks that score is at least 50?', ['score >= 50', 'score => 50', 'score =< 50', 'score ==< 50'], 0],
+    ['Conditions', 'What does an else if branch let you do?', ['Check another condition if earlier branches did not match', 'Repeat a block forever', 'Declare a constant', 'Create an array'], 0],
+    ['Conditions', 'Practical: What is the value of 3 < 2 ? "A" : "B"?', ['"B"', '"A"', 'false', 'undefined'], 0],
+    ['Conditions', 'Which logical operator means both conditions must be true?', ['&&', '||', '!', '??'], 0],
+    ['Conditions', 'Practical: Which expression is true when age is 18 or older?', ['age >= 18', 'age > 18 only', 'age = 18', 'age <= 18'], 0],
+    ['Conditions', 'What does the logical OR operator (||) require?', ['At least one condition is truthy', 'Every condition is truthy', 'Every condition is false', 'The left value is a number'], 0],
+    ['Conditions', 'What does the ! operator do to a boolean value?', ['Negates it', 'Adds one', 'Compares its type', 'Joins two strings'], 0],
+    ['Conditions', 'Practical: Which branch runs when temperature is 20 in if (temperature > 20) ... else ...?', ['The else branch', 'The if branch', 'Both branches', 'Neither branch always'], 0],
+    ['Conditions', 'When is a switch statement often useful?', ['When comparing one value against several possible cases', 'When repeating code for each array item', 'When declaring a function parameter', 'When importing a module'], 0],
+    ['Conditions', 'Why should a switch case commonly end with break?', ['To prevent falling through to the next case', 'To restart the switch', 'To return a boolean', 'To declare the next case'], 0],
+    ['Conditions', 'Practical: What does (isMember && hasTicket) evaluate to if isMember is true and hasTicket is false?', ['false', 'true', 'null', '"false"'], 0]
   ],
   'Node.js': [
     ['npm', 'Practical: Which command installs dependencies listed in package.json?', ['npm install', 'node package.json', 'npm start --all', 'install node_modules'], 0],
@@ -220,56 +234,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categories = await fetchAPI('/lessons');
     if (!categories.length) throw new Error('No learning stages are available yet.');
 
+    const activeLessonMatch = categories.flatMap((category, categoryIndex) =>
+      category.lessons.map(lesson => ({ category, categoryIndex, lesson }))
+    ).find(item => item.lesson.status === 'in_progress');
     const incompleteIndex = categories.findIndex(category =>
       category.lessons.length > 0 && category.lessons.some(lesson => lesson.status !== 'completed')
     );
     const currentIndex = incompleteIndex === -1 ? categories.length - 1 : incompleteIndex;
-    const currentCategory = categories[currentIndex];
-    summary.innerHTML = `<span class="practice-current-dot"></span><span>Current topic</span><strong>${currentCategory.name}</strong>`;
+    const currentCategory = activeLessonMatch?.category || categories[currentIndex];
+    const currentLesson = activeLessonMatch?.lesson || currentCategory.lessons.find(lesson => lesson.status !== 'completed') || currentCategory.lessons.at(-1);
+    if (!currentLesson) throw new Error('No lesson is available to practice yet.');
+    summary.innerHTML = `<span class="practice-current-dot"></span><span>Current lesson</span><strong>${escapePracticeText(currentCategory.name)} · ${escapePracticeText(currentLesson.title)}</strong>`;
 
     container.innerHTML = `
       <section class="card practice-picker">
         <div class="practice-picker-copy">
-          <h2>Choose a topic to practice</h2>
-          <p class="text-muted">Choose a learning topic, then a subtopic such as JavaScript → Conditions to open its focused practice questions.</p>
+          <h2>Practice your current lesson</h2>
+          <p class="text-muted">Your practice is matched automatically to the lesson marked in progress in your learning tracker.</p>
         </div>
-        <label for="practice-stage-select">Topic</label>
-        <select id="practice-stage-select" class="form-control"></select>
-        <label for="practice-subtopic-select">Subtopic</label>
-        <select id="practice-subtopic-select" class="form-control"></select>
-        <button id="start-practice" class="btn btn-primary" type="button">Start subtopic practice</button>
+        <p><strong>${escapePracticeText(currentCategory.name)} → ${escapePracticeText(currentLesson.title)}</strong></p>
       </section>
       <div id="practice-trial" class="practice-trial" aria-live="polite"></div>
     `;
 
-    const select = document.getElementById('practice-stage-select');
-    const subtopicSelect = document.getElementById('practice-subtopic-select');
-    const renderSubtopics = () => {
-      const category = categories[Number(select.value)];
-      subtopicSelect.replaceChildren();
-      category.lessons.forEach((lesson, index) => {
-        const option = document.createElement('option');
-        option.value = String(index);
-        option.textContent = lesson.title;
-        subtopicSelect.appendChild(option);
-      });
-    };
-
-    categories.slice(0, currentIndex + 1).forEach((category, index) => {
-      const completed = category.lessons.length > 0 && category.lessons.every(lesson => lesson.status === 'completed');
-      const option = document.createElement('option');
-      option.value = String(index);
-      option.textContent = `${category.name}${index === currentIndex ? ' · Current' : completed ? ' · Review' : ''}`;
-      select.appendChild(option);
-    });
-    select.value = String(currentIndex);
-    select.addEventListener('change', renderSubtopics);
-    renderSubtopics();
-
     const trialContainer = document.getElementById('practice-trial');
-    const startTrial = () => {
-      const category = categories[Number(select.value)];
-      const lesson = category.lessons[Number(subtopicSelect.value)];
+    const startTrial = (category, lesson) => {
       const normalizeTopic = value => String(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
       const lessonName = normalizeTopic(lesson.title.replace(/^javascript introduction$/i, 'javascript'));
       const aliases = {
@@ -287,7 +276,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         topicNames.includes(normalizeTopic(question.topic))
       );
       if (!questions?.length) {
-        trialContainer.innerHTML = `<div class="card practice-empty"><h3>${escapePracticeText(lesson.title)} practice is being prepared</h3><p class="text-muted">There are no questions for this subtopic yet. Choose another subtopic or check back after its question set is added.</p></div>`;
+        trialContainer.innerHTML = `<div class="card practice-empty"><h3>Questions for ${escapePracticeText(lesson.title)} are coming soon</h3><p class="text-muted">Your current lesson was detected, but its focused question set has not been added yet.</p><a href="lesson-detail.html?id=${encodeURIComponent(lesson.id)}" class="btn btn-outline">Continue lesson</a></div>`;
         return;
       }
 
@@ -341,7 +330,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       trialContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
-    document.getElementById('start-practice').addEventListener('click', startTrial);
+    startTrial(currentCategory, currentLesson);
   } catch (error) {
     summary.textContent = 'Your current stage could not be loaded.';
     container.innerHTML = `<div class="card practice-empty"><h3>Practice is unavailable</h3><p class="text-muted">${error.message}</p><a href="lessons.html" class="btn btn-outline">Go to lessons</a></div>`;
