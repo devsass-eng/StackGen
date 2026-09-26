@@ -570,6 +570,7 @@ textarea.form-control { resize: vertical; }
     flex: 0 0 40px;
     width: 40px;
     height: 40px;
+    margin-block: 0.3rem;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: var(--bg-card);
