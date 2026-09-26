@@ -1,6 +1,44 @@
 // Global utilities and state
 
 const API_URL = '/api';
+const offlineKey = (kind) => {
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  return `stackgenOffline:${user?.id || user?.email || 'default'}:${kind}`;
+};
+const readOffline = (key) => {
+  try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch { return null; }
+};
+const writeOffline = (key, value) => {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (err) { console.warn('Unable to save offline data', err); }
+};
+const applyQueuedProgress = (data) => {
+  if (!Array.isArray(data)) return data;
+  const queue = readOffline(offlineKey('progress-queue')) || [];
+  return data.map(category => ({ ...category, lessons: category.lessons.map(lesson => {
+    const pending = queue.find(item => String(item.lessonId) === String(lesson.id));
+    return pending ? { ...lesson, status: pending.status } : lesson;
+  }) }));
+};
+const syncOfflineProgress = async () => {
+  const token = localStorage.getItem('token');
+  if (!token || !navigator.onLine) return;
+  const key = offlineKey('progress-queue');
+  const queue = readOffline(key) || [];
+  const remaining = [];
+  for (const item of queue) {
+    try {
+      const response = await fetch(`${API_URL}/progress/${item.lessonId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ status: item.status })
+      });
+      if (!response.ok) remaining.push(item);
+    } catch { remaining.push(item); }
+  }
+  writeOffline(key, remaining);
+};
+window.addEventListener('online', syncOfflineProgress);
+window.addEventListener('load', syncOfflineProgress);
 
 const applyPreferences = () => {
   const prefs = JSON.parse(localStorage.getItem('stackgenPreferences') || '{}');
@@ -41,10 +79,33 @@ const fetchAPI = async (endpoint, options = {}) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers
-  });
+  let response;
+  try {
+    response = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+  } catch (err) {
+    if (options.method === 'PUT' && endpoint.startsWith('/progress/')) {
+      const lessonId = endpoint.split('/').pop();
+      const { status } = JSON.parse(options.body || '{}');
+      const key = offlineKey('progress-queue');
+      const queue = readOffline(key) || [];
+      const existing = queue.findIndex(item => String(item.lessonId) === String(lessonId));
+      const update = { lessonId, status, updatedAt: new Date().toISOString() };
+      if (existing >= 0) queue[existing] = update; else queue.push(update);
+      writeOffline(key, queue);
+      return { msg: 'Saved on this device. It will sync when you are online.', offlineQueued: true };
+    }
+    if (options.method && options.method !== 'GET') throw err;
+    const cacheKey = offlineKey(`GET:${endpoint}`);
+    const cached = readOffline(cacheKey);
+    if (cached !== null) {
+      if (endpoint === '/lessons') return applyQueuedProgress(cached);
+      if (endpoint.startsWith('/lessons/')) {
+        const pending = (readOffline(offlineKey('progress-queue')) || []).find(item => endpoint === `/lessons/${item.lessonId}`);
+        return pending ? { ...cached, status: pending.status } : cached;
+      }
+    }
+    throw err;
+  }
 
   const data = await response.json();
 
@@ -57,6 +118,9 @@ const fetchAPI = async (endpoint, options = {}) => {
     throw new Error(data.msg || 'Something went wrong');
   }
 
+  if ((!options.method || options.method === 'GET') && (endpoint === '/lessons' || endpoint.startsWith('/lessons/'))) {
+    writeOffline(offlineKey(`GET:${endpoint}`), data);
+  }
   return data;
 };
 
