@@ -225,28 +225,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
     const currentIndex = incompleteIndex === -1 ? categories.length - 1 : incompleteIndex;
     const currentCategory = categories[currentIndex];
-    summary.innerHTML = `<span class="practice-current-dot"></span><span>Current stage</span><strong>${currentCategory.name}</strong>`;
+    summary.innerHTML = `<span class="practice-current-dot"></span><span>Current topic</span><strong>${currentCategory.name}</strong>`;
 
     container.innerHTML = `
       <section class="card practice-picker">
         <div class="practice-picker-copy">
-          <h2>Choose a stage to practice</h2>
-          <p class="text-muted">Each trial has 15 questions across the stage topics, including practical scenarios. Your current stage is selected; earlier stages stay available for review.</p>
+          <h2>Choose a topic to practice</h2>
+          <p class="text-muted">Choose a learning topic, then a subtopic such as JavaScript → Conditions to open its focused practice questions.</p>
         </div>
-        <label for="practice-stage-select">Learning stage</label>
+        <label for="practice-stage-select">Topic</label>
         <select id="practice-stage-select" class="form-control"></select>
-        <div id="practice-topic-list" class="practice-topic-list"></div>
-        <button id="start-practice" class="btn btn-primary" type="button">Start stage trial</button>
+        <label for="practice-subtopic-select">Subtopic</label>
+        <select id="practice-subtopic-select" class="form-control"></select>
+        <button id="start-practice" class="btn btn-primary" type="button">Start subtopic practice</button>
       </section>
       <div id="practice-trial" class="practice-trial" aria-live="polite"></div>
     `;
 
     const select = document.getElementById('practice-stage-select');
-    const topicList = document.getElementById('practice-topic-list');
-    const renderStageInfo = () => {
+    const subtopicSelect = document.getElementById('practice-subtopic-select');
+    const renderSubtopics = () => {
       const category = categories[Number(select.value)];
-      const topics = category.lessons.map(lesson => `<span class="practice-topic-chip">${lesson.title}</span>`).join('');
-      topicList.innerHTML = `<span class="practice-topic-label">Topics in this stage</span><div>${topics}</div>`;
+      subtopicSelect.replaceChildren();
+      category.lessons.forEach((lesson, index) => {
+        const option = document.createElement('option');
+        option.value = String(index);
+        option.textContent = lesson.title;
+        subtopicSelect.appendChild(option);
+      });
     };
 
     categories.slice(0, currentIndex + 1).forEach((category, index) => {
@@ -257,21 +263,37 @@ document.addEventListener('DOMContentLoaded', async () => {
       select.appendChild(option);
     });
     select.value = String(currentIndex);
-    select.addEventListener('change', renderStageInfo);
-    renderStageInfo();
+    select.addEventListener('change', renderSubtopics);
+    renderSubtopics();
 
     const trialContainer = document.getElementById('practice-trial');
     const startTrial = () => {
       const category = categories[Number(select.value)];
-      const questions = practiceQuestionBank[category.name];
+      const lesson = category.lessons[Number(subtopicSelect.value)];
+      const normalizeTopic = value => String(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      const lessonName = normalizeTopic(lesson.title.replace(/^javascript introduction$/i, 'javascript'));
+      const aliases = {
+        'responsive design': ['responsive design', 'mobile first design', 'fluid layouts', 'media queries'],
+        'css basics': ['css basics'],
+        'html basics': ['html basics'],
+        'javascript': ['javascript', 'variables'],
+        'javascript introduction': ['javascript', 'variables'],
+        'authentication': ['authentication vs authorization', 'password storage'],
+        'connecting frontend to backend': ['frontend and backend'],
+        'connecting backend to postgresql': ['database integration']
+      };
+      const topicNames = aliases[lessonName] || [lessonName];
+      const questions = (practiceQuestionBank[category.name] || []).filter(question =>
+        topicNames.includes(normalizeTopic(question.topic))
+      );
       if (!questions?.length) {
-        trialContainer.innerHTML = '<div class="card practice-empty"><h3>Practice questions are coming soon</h3><p class="text-muted">This stage is available in your curriculum, but its trial is not ready yet.</p></div>';
+        trialContainer.innerHTML = `<div class="card practice-empty"><h3>${escapePracticeText(lesson.title)} practice is being prepared</h3><p class="text-muted">There are no questions for this subtopic yet. Choose another subtopic or check back after its question set is added.</p></div>`;
         return;
       }
 
       trialContainer.innerHTML = `
         <form id="practice-trial-form" class="practice-trial-form">
-          <div class="practice-trial-heading"><div><span class="practice-eyebrow">15-question stage trial</span><h2>${category.name}</h2><p class="text-muted">Includes practical scenarios. Choose the best answer for each.</p></div><span class="practice-question-count">${questions.length} questions</span></div>
+          <div class="practice-trial-heading"><div><span class="practice-eyebrow">${escapePracticeText(category.name)} subtopic practice</span><h2>${escapePracticeText(lesson.title)}</h2><p class="text-muted">Focused questions for this subtopic. Practical scenarios are included where available.</p></div><span class="practice-question-count">${questions.length} questions</span></div>
           ${questions.map((question, questionIndex) => `
             <fieldset class="practice-question" data-question="${questionIndex}">
               <legend><span class="practice-question-number">${String(questionIndex + 1).padStart(2, '0')}</span><span><small>${question.practical ? 'Practical · ' : ''}${question.topic}</small>${question.prompt.replace(/^Practical: /, '')}</span></legend>
@@ -310,7 +332,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const result = document.createElement('section');
         result.className = `practice-result card ${passed ? 'passed' : 'needs-review'}`;
         result.setAttribute('role', 'status');
-        result.innerHTML = `<div><span class="practice-eyebrow">Trial result</span><h2>${passed ? 'Stage trial passed' : 'Keep practicing'}</h2><p class="text-muted">${passed ? 'Nice work. You have a solid grasp of this stage.' : 'Review the topics below and try the stage trial again.'}</p></div><strong class="practice-score">${score}<span>/${questions.length}</span></strong>`;
+        result.innerHTML = `<div><span class="practice-eyebrow">Subtopic result</span><h2>${passed ? 'Subtopic practice passed' : 'Keep practicing'}</h2><p class="text-muted">${passed ? `Nice work. You have a solid grasp of ${escapePracticeText(lesson.title)}.` : 'Review the answers below and try this subtopic again.'}</p></div><strong class="practice-score">${score}<span>/${questions.length}</span></strong>`;
         form.before(result);
         form.querySelectorAll('input, button').forEach(control => { control.disabled = true; });
         form.querySelector('.practice-submit').textContent = 'Trial submitted';

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stackgen-shell-v11';
+const CACHE_NAME = 'stackgen-shell-v12';
 const APP_SHELL = [
   '/', '/index.html', '/login.html', '/register.html', '/forgot-password.html', '/reset-password.html', '/lessons.html', '/practice.html',
   '/lesson-detail.html', '/roadmap.html', '/progress.html', '/projects.html',
