@@ -247,6 +247,16 @@ const setupSidebar = () => {
 
   const logoutBtn = document.getElementById('logout-btn');
   const nav = document.querySelector('.nav-links');
+  if (nav && !document.getElementById('practice-nav-link')) {
+    const lessonsItem = nav.querySelector('a[href="lessons.html"]')?.closest('li');
+    if (lessonsItem) {
+      const item = document.createElement('li');
+      item.innerHTML = '<a href="practice.html" id="practice-nav-link">🧠 Practice</a>';
+      lessonsItem.after(item);
+    }
+  }
+  const practiceLink = document.getElementById('practice-nav-link');
+  if (practiceLink && window.location.pathname.endsWith('practice.html')) practiceLink.classList.add('active');
   if (nav && !document.getElementById('settings-nav-link')) {
     const item = document.createElement('li');
     item.innerHTML = '<a href="settings.html" id="settings-nav-link">⚙️ Settings</a>';

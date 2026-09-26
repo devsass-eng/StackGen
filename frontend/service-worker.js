@@ -1,12 +1,12 @@
-const CACHE_NAME = 'stackgen-shell-v7';
+const CACHE_NAME = 'stackgen-shell-v8';
 const APP_SHELL = [
-  '/', '/index.html', '/login.html', '/register.html', '/lessons.html',
+  '/', '/index.html', '/login.html', '/register.html', '/lessons.html', '/practice.html',
   '/lesson-detail.html', '/roadmap.html', '/progress.html', '/projects.html',
   '/notes.html', '/profile.html', '/settings.html', '/offline.html',
   '/manifest.webmanifest', '/icons/stackgen.svg', '/icons/stackgen-brand.svg', '/css/style.css', '/js/pwa.js',
   '/js/app.js', '/js/auth.js', '/js/dashboard.js', '/js/lessons.js',
   '/js/lesson-detail.js', '/js/roadmap.js', '/js/progress.js',
-  '/js/projects.js', '/js/notes.js', '/js/profile.js'
+  '/js/projects.js', '/js/notes.js', '/js/profile.js', '/js/practice.js'
 ];
 
 self.addEventListener('install', event => {
