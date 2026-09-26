@@ -151,6 +151,7 @@ a:hover {
 }
 .header h1 { min-width: 0; }
 .mobile-brand { display: none; }
+:root:not([data-theme="light"]) .mobile-brand-logo { filter: brightness(0) invert(1); }
 
 .user-info {
   display: flex;
