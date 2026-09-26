@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson Details - StackGen</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .lesson-content {
+      line-height: 1.7;
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .lesson-content h2 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: var(--accent-primary);
+    }
+    .lesson-content p, .lesson-content ul {
+      margin-bottom: 1.5rem;
+    }
+    .lesson-content li {
+      margin-bottom: 0.5rem;
+      margin-left: 1.5rem;
+    }
+    .lesson-content code {
+      background: var(--bg-card);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-secondary);
+      font-family: monospace;
+    }
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Monaco', monospace;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+      white-space: pre;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 2rem;
+    }
+    .action-panel {
+      background: var(--bg-card);
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 3rem;
+      border: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <h2>StackGen</h2>
+      <p>Learn • Build • Track • Grow</p>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">🏠 Dashboard</a></li>
+      <li><a href="roadmap.html">🗺️ Roadmap</a></li>
+      <li><a href="lessons.html" class="active">📚 Lessons</a></li>
+      <li><a href="progress.html">📊 Progress</a></li>
+      <li><a href="projects.html">💻 Projects</a></li>
+      <li><a href="notes.html">📝 Notes</a></li>
+      <li><a href="profile.html">👤 Profile</a></li>
+      <li><a href="#" id="logout-btn">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="mobile-toggle" id="mobile-toggle">☰</div>
+      <div>
+        <a href="lessons.html" style="color: var(--text-muted); text-decoration: none;">← Back to Lessons</a>
+      </div>
+      <div class="user-info" id="header-user-info">
+        <!-- Injected via app.js -->
+      </div>
+    </header>
+
+    <div id="lesson-container">
+      <p>Loading lesson...</p>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/lesson-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - StackGen</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .project-actions {
+      display: flex; gap: 0.5rem; margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <h2>StackGen</h2>
+      <p>Learn • Build • Track • Grow</p>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">🏠 Dashboard</a></li>
+      <li><a href="roadmap.html">🗺️ Roadmap</a></li>
+      <li><a href="lessons.html">📚 Lessons</a></li>
+      <li><a href="progress.html">📊 Progress</a></li>
+      <li><a href="projects.html" class="active">💻 Projects</a></li>
+      <li><a href="notes.html">📝 Notes</a></li>
+      <li><a href="profile.html">👤 Profile</a></li>
+      <li><a href="#" id="logout-btn">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="mobile-toggle" id="mobile-toggle">☰</div>
+      <h1>Projects</h1>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button class="btn btn-primary" id="add-project-btn">Add Project</button>
+        <div class="user-info" id="header-user-info">
+          <!-- Injected via app.js -->
+        </div>
+      </div>
+    </header>
+
+    <div class="grid-2" id="projects-container">
+      <!-- Projects populated via JS -->
+      <p>Loading projects...</p>
+    </div>
+  </main>
+
+  <!-- Project Modal -->
+  <div id="project-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="close-project-modal">&times;</span>
+      <h2 id="modal-title" class="mb-1">Add Project</h2>
+      <form id="project-form">
+        <input type="hidden" id="project-id">
+        <div class="form-group">
+          <label>Project Name</label>
+          <input type="text" id="project-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="project-description" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Technologies (comma separated)</label>
+          <input type="text" id="project-tech" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="project-status" class="form-control">
+            <option value="planned">Planned</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-1">Save Project</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/projects.js"></script>
+</body>
+</html>

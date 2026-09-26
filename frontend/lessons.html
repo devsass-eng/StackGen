@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lessons - StackGen</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <h2>StackGen</h2>
+      <p>Learn • Build • Track • Grow</p>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">🏠 Dashboard</a></li>
+      <li><a href="roadmap.html">🗺️ Roadmap</a></li>
+      <li><a href="lessons.html" class="active">📚 Lessons</a></li>
+      <li><a href="progress.html">📊 Progress</a></li>
+      <li><a href="projects.html">💻 Projects</a></li>
+      <li><a href="notes.html">📝 Notes</a></li>
+      <li><a href="profile.html">👤 Profile</a></li>
+      <li><a href="#" id="logout-btn">🚪 Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="mobile-toggle" id="mobile-toggle">☰</div>
+      <h1>Lessons</h1>
+      <div class="user-info" id="header-user-info">
+        <!-- Injected via app.js -->
+      </div>
+    </header>
+
+    <div id="lessons-container">
+      <!-- Lessons populated via JS -->
+      <p>Loading lessons...</p>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/lessons.js"></script>
+</body>
+</html>
