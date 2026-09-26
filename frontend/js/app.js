@@ -199,9 +199,15 @@ const setupSidebar = () => {
   const header = document.querySelector('.header');
 
   if (header && !header.querySelector('.mobile-brand')) {
-    const mobileBrand = document.createElement('span');
+    const mobileBrand = document.createElement('a');
     mobileBrand.className = 'mobile-brand';
-    mobileBrand.textContent = 'STACKGEN';
+    mobileBrand.href = 'index.html';
+    mobileBrand.setAttribute('aria-label', 'StackGen home');
+    const logo = document.createElement('img');
+    logo.className = 'mobile-brand-logo';
+    logo.src = '/icons/stackgen-brand.svg';
+    logo.alt = 'StackGen';
+    mobileBrand.appendChild(logo);
     header.insertBefore(mobileBrand, document.getElementById('header-user-info') || null);
   }
   

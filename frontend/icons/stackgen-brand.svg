@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 150" role="img" aria-labelledby="title">
+  <title id="title">StackGen</title>
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0878ff"/>
+      <stop offset="1" stop-color="#0060dc"/>
+    </linearGradient>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#102c60"/>
+      <stop offset="1" stop-color="#061b43"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(4 7)">
+    <path fill="url(#blue)" d="M139 7H69L17 34v23c0 11 7 19 19 23l72 26 16 6-38 21-65-24-8 18 64 24c10 4 20 3 29-2l42-24c9-5 14-14 14-24 0-12-7-20-19-25L59 51 78 41h61z"/>
+    <path fill="url(#navy)" d="m23 107 74 27c7 3 14 2 20-2l48-27v20l-42 24c-9 5-19 6-29 2l-70-26c-9-3-12-10-9-18z"/>
+  </g>
+  <text x="174" y="108" font-family="Arial, Helvetica, sans-serif" font-size="79" font-weight="900" letter-spacing="-3">
+    <tspan fill="#0b214b">STACK</tspan><tspan fill="#0872f5">GEN</tspan>
+  </text>
+</svg>
