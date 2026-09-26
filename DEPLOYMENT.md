@@ -15,6 +15,10 @@ StackGen is configured as a single Render web service: Express serves both the f
 3. When prompted, set `DATABASE_URL` to the hosted PostgreSQL connection URL. Render generates `JWT_SECRET` for the service.
 4. Wait for the deploy health check at `/api/health` to pass, then open the service's `onrender.com` URL and register an account.
 
+## Password recovery email
+
+Forgot-password links use Resend to deliver one-hour, single-use password reset links. To enable delivery, add `RESEND_API_KEY` and `PASSWORD_RESET_FROM` in the Render service environment. `PASSWORD_RESET_FROM` must be a sender address verified with Resend; `APP_URL` should be the public StackGen URL. Keep the Resend API key private and never commit it to `.env.example` or source control.
+
 The app uses same-origin `/api` requests, so the hosted frontend and backend share the service URL. The service runs `npm run start:deploy`, which applies the idempotent schema setup before starting Express.
 
 ## Data storage note

@@ -18,6 +18,7 @@ async function initializeDatabase() {
     await client.query(schema);
     await client.query(`
       ALTER TABLE users
+        ADD COLUMN IF NOT EXISTS auth_version INTEGER NOT NULL DEFAULT 0,
         ADD COLUMN IF NOT EXISTS profile_picture VARCHAR(255),
         ADD COLUMN IF NOT EXISTS phone VARCHAR(50),
         ADD COLUMN IF NOT EXISTS address TEXT,

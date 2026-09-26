@@ -12,3 +12,9 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
+      - key: APP_URL
+        value: https://stackgen.onrender.com
+      - key: RESEND_API_KEY
+        sync: false
+      - key: PASSWORD_RESET_FROM
+        sync: false

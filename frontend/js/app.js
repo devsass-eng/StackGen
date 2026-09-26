@@ -58,8 +58,9 @@ const checkAuth = () => {
   const path = window.location.pathname;
   
   const isAuthPage = path.includes('login.html') || path.includes('register.html');
+  const isPasswordRecoveryPage = path.includes('forgot-password.html') || path.includes('reset-password.html');
   
-  if (!token && !isAuthPage) {
+  if (!token && !isAuthPage && !isPasswordRecoveryPage) {
     window.location.href = 'login.html';
   } else if (token && isAuthPage) {
     window.location.href = 'index.html';
