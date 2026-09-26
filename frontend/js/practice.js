@@ -234,15 +234,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categories = await fetchAPI('/lessons');
     if (!categories.length) throw new Error('No learning stages are available yet.');
 
-    const activeLessonMatch = categories.flatMap((category, categoryIndex) =>
-      category.lessons.map(lesson => ({ category, categoryIndex, lesson }))
-    ).find(item => item.lesson.status === 'in_progress');
+    const allLessons = categories.flatMap((category, categoryIndex) =>
+      category.lessons.map((lesson, lessonIndex) => ({ category, categoryIndex, lessonIndex, lesson }))
+    );
+    const latestCompletedLesson = allLessons
+      .filter(item => item.lesson.status === 'completed')
+      .reduce((latest, item) => {
+        if (!latest) return item;
+        const latestTime = latest.lesson.completed_at ? new Date(latest.lesson.completed_at).getTime() : 0;
+        const itemTime = item.lesson.completed_at ? new Date(item.lesson.completed_at).getTime() : 0;
+        return itemTime >= latestTime ? item : latest;
+      }, null);
+    const activeLessonMatch = allLessons.find(item => item.lesson.status === 'in_progress');
     const incompleteIndex = categories.findIndex(category =>
       category.lessons.length > 0 && category.lessons.some(lesson => lesson.status !== 'completed')
     );
     const currentIndex = incompleteIndex === -1 ? categories.length - 1 : incompleteIndex;
-    const currentCategory = activeLessonMatch?.category || categories[currentIndex];
-    const currentLesson = activeLessonMatch?.lesson || currentCategory.lessons.find(lesson => lesson.status !== 'completed') || currentCategory.lessons.at(-1);
+    const selectedLesson = latestCompletedLesson || activeLessonMatch;
+    const currentCategory = selectedLesson?.category || categories[currentIndex];
+    const currentLesson = selectedLesson?.lesson || currentCategory.lessons.find(lesson => lesson.status !== 'completed') || currentCategory.lessons.at(-1);
     if (!currentLesson) throw new Error('No lesson is available to practice yet.');
     summary.innerHTML = `<span class="practice-current-dot"></span><span>Current lesson</span><strong>${escapePracticeText(currentCategory.name)} · ${escapePracticeText(currentLesson.title)}</strong>`;
 
@@ -250,7 +260,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <section class="card practice-picker">
         <div class="practice-picker-copy">
           <h2>Practice your current lesson</h2>
-          <p class="text-muted">Your practice is matched automatically to the lesson marked in progress in your learning tracker.</p>
+          <p class="text-muted">Practice automatically starts with the most recently completed lesson. Its focused questions come first, followed by review questions from the same learning stage.</p>
         </div>
         <p><strong>${escapePracticeText(currentCategory.name)} → ${escapePracticeText(currentLesson.title)}</strong></p>
       </section>
@@ -272,17 +282,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         'connecting backend to postgresql': ['database integration']
       };
       const topicNames = aliases[lessonName] || [lessonName];
-      const questions = (practiceQuestionBank[category.name] || []).filter(question =>
+      const stageQuestions = practiceQuestionBank[category.name] || [];
+      const focusedQuestions = stageQuestions.filter(question =>
         topicNames.includes(normalizeTopic(question.topic))
       );
-      if (!questions?.length) {
-        trialContainer.innerHTML = `<div class="card practice-empty"><h3>Questions for ${escapePracticeText(lesson.title)} are coming soon</h3><p class="text-muted">Your current lesson was detected, but its focused question set has not been added yet.</p><a href="lesson-detail.html?id=${encodeURIComponent(lesson.id)}" class="btn btn-outline">Continue lesson</a></div>`;
+      const questions = [...focusedQuestions];
+      for (const question of stageQuestions) {
+        if (questions.length >= 15) break;
+        if (!questions.includes(question)) questions.push(question);
+      }
+      if (questions.length < 15) {
+        for (const question of stageQuestions) {
+          if (questions.length >= 15) break;
+          questions.push(question);
+        }
+      }
+      if (!questions.length) {
+        trialContainer.innerHTML = `<div class="card practice-empty"><h3>Questions for ${escapePracticeText(lesson.title)} are coming soon</h3><p class="text-muted">Your most recently completed lesson was detected, but this learning stage has no question bank yet.</p><a href="lesson-detail.html?id=${encodeURIComponent(lesson.id)}" class="btn btn-outline">Review lesson</a></div>`;
         return;
       }
 
       trialContainer.innerHTML = `
         <form id="practice-trial-form" class="practice-trial-form">
-          <div class="practice-trial-heading"><div><span class="practice-eyebrow">${escapePracticeText(category.name)} subtopic practice</span><h2>${escapePracticeText(lesson.title)}</h2><p class="text-muted">Focused questions for this subtopic. Practical scenarios are included where available.</p></div><span class="practice-question-count">${questions.length} questions</span></div>
+          <div class="practice-trial-heading"><div><span class="practice-eyebrow">Recently completed · ${escapePracticeText(category.name)}</span><h2>${escapePracticeText(lesson.title)}</h2><p class="text-muted">Questions about this topic first, with review questions from ${escapePracticeText(category.name)} to complete your 15-question trial.</p></div><span class="practice-question-count">${questions.length} questions</span></div>
           ${questions.map((question, questionIndex) => `
             <fieldset class="practice-question" data-question="${questionIndex}">
               <legend><span class="practice-question-number">${String(questionIndex + 1).padStart(2, '0')}</span><span><small>${question.practical ? 'Practical · ' : ''}${question.topic}</small>${question.prompt.replace(/^Practical: /, '')}</span></legend>
