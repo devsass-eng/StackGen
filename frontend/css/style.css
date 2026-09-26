@@ -150,6 +150,7 @@ a:hover {
   gap: 1rem;
 }
 .header h1 { min-width: 0; }
+.mobile-brand { display: none; }
 
 .user-info {
   display: flex;
@@ -490,6 +491,16 @@ textarea.form-control { resize: vertical; }
     box-shadow: 0 1px 0 var(--border-color);
   }
   .header h1 { flex: 1 1 auto; font-size: 1.45rem; margin: 0; }
+  .header .mobile-brand {
+    display: block;
+    flex: 0 0 auto;
+    margin-left: auto;
+    color: var(--accent-primary);
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
   .header .user-info { flex: 1 0 100%; justify-content: flex-end; }
   .card { padding: 1.25rem; }
   .mobile-nav-backdrop {
@@ -529,6 +540,7 @@ textarea.form-control { resize: vertical; }
 @media (max-width: 560px) {
   .header { gap: 0.45rem; }
   .header h1 { font-size: 1.1rem; }
+  .header .mobile-brand { font-size: 0.8rem; letter-spacing: 0.06em; }
   .mobile-toggle, .theme-toggle, .notification-toggle, .avatar {
     width: 32px;
     height: 32px;

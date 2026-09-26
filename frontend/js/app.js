@@ -196,6 +196,14 @@ window.recordCompletionNotifications = (before, after) => {
 const setupSidebar = () => {
   const toggle = document.getElementById('mobile-toggle');
   const sidebar = document.getElementById('sidebar');
+  const header = document.querySelector('.header');
+
+  if (header && !header.querySelector('.mobile-brand')) {
+    const mobileBrand = document.createElement('span');
+    mobileBrand.className = 'mobile-brand';
+    mobileBrand.textContent = 'STACKGEN';
+    header.insertBefore(mobileBrand, document.getElementById('header-user-info') || null);
+  }
   
   if (toggle && sidebar) {
     toggle.addEventListener('click', () => {
