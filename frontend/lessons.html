@@ -38,6 +38,15 @@
       </div>
     </header>
 
+    <section class="lesson-search card" aria-label="Search lessons">
+      <label for="lesson-search-input">Search topics</label>
+      <div class="lesson-search-controls">
+        <input id="lesson-search-input" type="search" placeholder="Search by topic, course, or keyword..." autocomplete="off">
+        <button id="lesson-search-clear" class="btn btn-outline" type="button" hidden>Clear</button>
+      </div>
+      <p id="lesson-search-status" class="text-muted" aria-live="polite">Search all lessons by topic or keyword.</p>
+    </section>
+
     <div id="lessons-container">
       <!-- Lessons populated via JS -->
       <p>Loading lessons...</p>
