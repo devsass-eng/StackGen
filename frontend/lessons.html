@@ -39,12 +39,27 @@
     </header>
 
     <section class="lesson-search card" aria-label="Search lessons">
-      <label for="lesson-search-input">Search topics</label>
-      <div class="lesson-search-controls">
-        <input id="lesson-search-input" type="search" placeholder="Search by topic, course, or keyword..." autocomplete="off">
-        <button id="lesson-search-clear" class="btn btn-outline" type="button" hidden>Clear</button>
+      <div class="lesson-search-heading">
+        <div>
+          <span class="lesson-search-eyebrow">Explore the curriculum</span>
+          <label for="lesson-search-input">Find your next topic</label>
+          <p>Search lessons by topic, course, or keyword.</p>
+        </div>
       </div>
-      <p id="lesson-search-status" class="text-muted" aria-live="polite">Search all lessons by topic or keyword.</p>
+      <div class="lesson-search-controls">
+        <svg class="lesson-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="10.8" cy="10.8" r="6.8"></circle>
+          <path d="m16 16 4.5 4.5"></path>
+        </svg>
+        <input id="lesson-search-input" type="search" placeholder="Try “JavaScript”, “APIs”, or “databases”" autocomplete="off">
+        <button id="lesson-search-clear" class="lesson-search-clear" type="button" aria-label="Clear search" title="Clear search" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+        </button>
+      </div>
+      <div class="lesson-search-meta">
+        <span id="lesson-search-status" aria-live="polite">Search all lessons by topic or keyword.</span>
+        <span class="lesson-search-hint" aria-hidden="true">LIVE SEARCH</span>
+      </div>
     </section>
 
     <div id="lessons-container">
