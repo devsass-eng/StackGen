@@ -60,6 +60,152 @@ const practiceQuestionBank = {
     { topic: 'Environment variables', prompt: 'Why use separate environment values for local and production systems?', options: ['To let each environment use its own URLs and secrets', 'To hide all frontend code', 'To make the app use no configuration', 'To share passwords publicly'], answer: 0, explanation: 'Separate configuration prevents local settings and credentials from being hard-coded into a production build.' }
   ]
 };
+
+// Extra questions bring each learning stage to a 15-question trial. Scenario
+// questions are marked Practical and check how the learner would apply a skill.
+const extraPracticeQuestions = {
+  HTML: [
+    ['HTML Basics', 'Practical: Which structure gives a valid HTML document its basic outline?', ['<!doctype html>, html, head, body', 'body, head, html', 'head, body, doctype', 'main, html, footer'], 0],
+    ['Semantic HTML', 'Which element is best for a self-contained article that could stand on its own?', ['<article>', '<div>', '<span>', '<b>'], 0],
+    ['Forms', 'Practical: Which input type asks the browser to validate an email address?', ['type="email"', 'type="text-email"', 'type="mailbox"', 'type="url-email"'], 0],
+    ['Forms', 'Which attribute prevents a form control from being left empty?', ['required', 'placeholder', 'autofocus', 'autocomplete'], 0],
+    ['Tables', 'Which element groups column heading cells in a table?', ['<thead>', '<caption>', '<tbody>', '<tfoot>'], 0],
+    ['Links and Navigation', 'Practical: Which attribute opens a link in a new tab?', ['target="_blank"', 'new="tab"', 'open="new"', 'rel="external-tab"'], 0],
+    ['Images', 'Which attribute provides alternative text for an image?', ['alt', 'title', 'caption', 'description'], 0],
+    ['Accessibility', 'Practical: A button contains only an icon. What should you add so assistive technology can name it?', ['An accessible label such as aria-label', 'A larger icon', 'A CSS title class', 'A placeholder attribute'], 0],
+    ['HTML Basics', 'Which element contains metadata and the document title?', ['<head>', '<header>', '<main>', '<meta>'], 0],
+    ['Semantic HTML', 'Which element represents navigation links?', ['<nav>', '<menuitem>', '<aside>', '<address>'], 0],
+    ['Forms', 'Practical: How do you associate a label with an input whose id is "email"?', ['Set the label for="email"', 'Set the label name="email"', 'Set input label="email"', 'Give both the same class'], 0]
+  ],
+  CSS: [
+    ['Selectors', 'Practical: Which selector styles every element with class card?', ['.card', '#card', 'card()', '*card'], 0],
+    ['Box Model', 'With box-sizing: border-box, what does the declared width include?', ['Content, padding, and border', 'Content only', 'Margin only', 'Content and margin'], 0],
+    ['Flexbox', 'Practical: Which declaration places flex items in a vertical column?', ['flex-direction: column', 'align-items: column', 'display: vertical', 'flex-wrap: column'], 0],
+    ['Grid', 'Which unit shares remaining grid space proportionally?', ['fr', 'px', 'vh', 'em'], 0],
+    ['Positioning', 'Which position value keeps an element in normal flow until a scroll threshold?', ['sticky', 'fixed', 'absolute', 'static'], 0],
+    ['CSS Basics', 'Practical: Which property changes the text color?', ['color', 'font-color', 'text-style', 'foreground'], 0],
+    ['Selectors', 'Which selector targets an element with id main?', ['#main', '.main', 'main#', '@main'], 0],
+    ['Box Model', 'Which property adds space outside an element border?', ['margin', 'padding', 'outline', 'gap'], 0],
+    ['Flexbox', 'Which property aligns flex items across the cross axis?', ['align-items', 'justify-content', 'flex-basis', 'order'], 0],
+    ['Grid', 'Practical: Which declaration creates two equal columns?', ['grid-template-columns: repeat(2, 1fr)', 'grid-columns: 2', 'columns: 1fr 1fr', 'display: grid(2)'], 0],
+    ['Positioning', 'Which positioning mode is removed from normal document flow and anchored to a positioned ancestor?', ['absolute', 'relative', 'static', 'sticky'], 0]
+  ],
+  'Responsive Design': [
+    ['Media Queries', 'Practical: Which query applies styles at widths up to 600px?', ['@media (max-width: 600px)', '@screen (width < 600)', '@responsive 600px', '@media mobile'], 0],
+    ['Mobile-first design', 'In mobile-first CSS, where do you put styles for wider screens?', ['Inside min-width media queries', 'Inside max-width media queries only', 'Inline on every element', 'In the HTML title'], 0],
+    ['Fluid layouts', 'Practical: Which CSS keeps an image inside its container without distorting it?', ['max-width: 100%; height: auto', 'width: 100vw; height: 100vh', 'min-width: 1000px', 'position: fixed'], 0],
+    ['Viewport', 'Which viewport declaration is commonly used for responsive pages?', ['width=device-width, initial-scale=1', 'height=device-height, scale=10', 'responsive=true', 'mobile=enabled'], 0],
+    ['CSS Variables', 'How do you read a custom property named --brand-color?', ['var(--brand-color)', 'get(--brand-color)', '$brand-color', 'css(--brand-color)'], 0],
+    ['Animations', 'Which property controls how long a CSS transition takes?', ['transition-duration', 'animation-count', 'transform-time', 'motion-speed'], 0],
+    ['Fluid layouts', 'Practical: Which width is generally safer for a content panel across screen sizes?', ['width: 100%; max-width: 60rem', 'width: 1200px', 'width: 100vw; padding: 80px', 'min-width: 900px'], 0],
+    ['Media Queries', 'What does a min-width media query commonly target?', ['Viewports at or wider than a breakpoint', 'Only smaller phones', 'Printers only', 'Image dimensions'], 0],
+    ['Mobile-first design', 'Why avoid fixed-width page layouts on phones?', ['They can cause horizontal overflow', 'They disable HTML', 'They make CSS variables invalid', 'They prevent touch input'], 0],
+    ['CSS Variables', 'Practical: Where can a site-wide custom property be declared?', [':root', ':document only', 'body::after only', '@variables'], 0],
+    ['Animations', 'Which user preference can CSS check to reduce motion?', ['prefers-reduced-motion', 'prefers-no-animation', 'motion-disabled', 'accessibility-motion'], 0]
+  ],
+  JavaScript: [
+    ['Data Types', 'What is the result of typeof null in JavaScript?', ['"object"', '"null"', '"undefined"', '"number"'], 0],
+    ['Operators', 'Practical: What is the result of 5 === "5"?', ['false', 'true', '5', 'A syntax error'], 0],
+    ['Loops', 'Which loop is convenient when you need each value from an array?', ['for...of', 'for...in on every case', 'while...in', 'repeat...until'], 0],
+    ['Arrays', 'What does array.map(callback) return?', ['A new array of callback results', 'The first matching item', 'A number of items', 'The original array sorted'], 0],
+    ['Objects', 'Practical: How do you read the name property from user?', ['user.name', 'user->name', 'user[name()]', 'name.user'], 0],
+    ['Functions', 'What does a function return when it has no return statement?', ['undefined', 'null', 'false', 'An empty string'], 0],
+    ['DOM Manipulation', 'Which method selects the first element matching a CSS selector?', ['document.querySelector()', 'document.getAll()', 'document.findCSS()', 'window.select()'], 0],
+    ['Events', 'Practical: Which method registers a click handler?', ['element.addEventListener("click", handler)', 'element.on("click", handler)', 'element.listenClick(handler)', 'element.clickHandler = true'], 0],
+    ['Fetch API', 'What should you check on a fetch response before treating HTTP errors as failures?', ['response.ok', 'response.json is true', 'response.statusText only', 'request.ready'], 0],
+    ['Promises', 'Which method handles a rejected promise?', ['catch()', 'thenError()', 'rejectWith()', 'finallyError()'], 0],
+    ['Error Handling', 'Practical: Which construct catches an exception from synchronous code?', ['try...catch', 'if...else', 'for...of', 'switch...case'], 0]
+  ],
+  'Node.js': [
+    ['npm', 'Practical: Which command installs dependencies listed in package.json?', ['npm install', 'node package.json', 'npm start --all', 'install node_modules'], 0],
+    ['Modules', 'Which CommonJS syntax imports a module?', ['require("./module")', 'include("./module")', 'using "./module"', 'load module from'], 0],
+    ['File System', 'Which Node module provides file operations?', ['node:fs', 'node:html', 'node:style', 'node:dom'], 0],
+    ['HTTP', 'Which built-in module can create an HTTP server?', ['node:http', 'node:request', 'node:webpage', 'node:server-ui'], 0],
+    ['Environment', 'Practical: How do you read the PORT environment variable?', ['process.env.PORT', 'process.PORT', 'env.process.PORT', 'node.config.PORT'], 0],
+    ['Asynchronous I/O', 'What is a benefit of non-blocking I/O?', ['The event loop can handle other work while waiting', 'It makes every operation synchronous', 'It removes the need for error handling', 'It runs only in the browser'], 0],
+    ['npm', 'Where are project scripts such as start commonly defined?', ['package.json', 'index.html', '.gitignore', 'README only'], 0],
+    ['Modules', 'Practical: What must a CommonJS module do to expose a value?', ['Assign it to module.exports or exports', 'Put it in a global CSS file', 'Add it to package-lock only', 'Call console.log'], 0],
+    ['File System', 'Which API style is usually preferred for new asynchronous file operations?', ['Promise-based fs/promises', 'Synchronous fs only', 'DOM FileReader', 'CSS url()'], 0],
+    ['HTTP', 'What does an HTTP server send after receiving a request?', ['A response', 'A package lock', 'A DOM event', 'A database schema every time'], 0],
+    ['Environment', 'Why keep secrets in environment variables?', ['They stay out of committed source code', 'They become encrypted automatically', 'They are visible only to the browser', 'They remove the need for access control'], 0]
+  ],
+  'Express.js': [
+    ['Routes', 'Practical: Which route handles GET requests to /lessons?', ['app.get("/lessons", handler)', 'app.fetch("/lessons", handler)', 'app.routeGET("/lessons")', 'app.useGET("/lessons")'], 0],
+    ['Middleware', 'What does middleware call to pass control onward?', ['next()', 'continue()', 'forward()', 'resumeRoute()'], 0],
+    ['JSON requests', 'Which middleware parses incoming JSON request bodies?', ['express.json()', 'express.staticJSON()', 'express.body()', 'express.parse("json")'], 0],
+    ['Error handling', 'How many parameters identify standard Express error middleware?', ['Four', 'Two', 'Three', 'Five'], 0],
+    ['Routes', 'Practical: Where is a route parameter from /users/:id read?', ['req.params.id', 'req.query.id', 'res.params.id', 'req.body.route.id'], 0],
+    ['Middleware', 'Where should middleware that handles errors be registered?', ['After routes and other middleware', 'Before all routes only', 'Inside package.json', 'In the browser script'], 0],
+    ['JSON requests', 'Which method sends a JSON response?', ['res.json(data)', 'req.json(data)', 'res.sendJSON(data)', 'response.writeObject(data)'], 0],
+    ['Routing', 'What does app.use() commonly register?', ['Middleware', 'A CSS selector', 'A database table', 'A browser event'], 0],
+    ['Routes', 'Practical: Which object contains query-string values?', ['req.query', 'req.params', 'res.locals', 'req.headers.path'], 0],
+    ['Middleware', 'What can middleware do before a route handler runs?', ['Inspect or modify the request and response', 'Change the browser viewport', 'Create HTML elements in the client', 'Automatically migrate a database'], 0],
+    ['Security', 'Where should authorization checks for a protected route happen?', ['On the server before returning protected data', 'Only by hiding the frontend link', 'In a CSS media query', 'Only during registration'], 0]
+  ],
+  'REST APIs': [
+    ['HTTP methods', 'Practical: Which method is normally used to create a new resource?', ['POST', 'GET', 'HEAD', 'OPTIONS'], 0],
+    ['HTTP status codes', 'Which status indicates the request succeeded but returned no body?', ['204', '301', '401', '500'], 0],
+    ['Resources', 'Which route best represents one lesson with id 42?', ['/api/lessons/42', '/api/getLesson?id=42/action', '/api/lesson42/delete', '/lesson-action/42'], 0],
+    ['Validation', 'What should an API return for invalid client input?', ['A clear 4xx response', 'A success response with no validation', 'A database password', 'A server stack trace'], 0],
+    ['CRUD APIs', 'Practical: Which method is commonly used to update part of a resource?', ['PATCH', 'TRACE', 'CONNECT', 'HEAD'], 0],
+    ['HTTP status codes', 'Which status indicates the client is not authenticated?', ['401', '200', '302', '503'], 0],
+    ['Resources', 'Why use nouns such as /api/projects in REST route paths?', ['They represent resources', 'They execute browser scripts', 'They encrypt requests', 'They define CSS classes'], 0],
+    ['Validation', 'Why validate request data on the server?', ['Clients can bypass frontend checks', 'Browsers cannot send strings', 'It automatically creates indexes', 'It hides public routes'], 0],
+    ['HTTP methods', 'Practical: Which method should retrieve a resource without changing it?', ['GET', 'DELETE', 'PATCH', 'POST'], 0],
+    ['CRUD APIs', 'Which operation does DELETE represent?', ['Removing a resource', 'Reading a collection', 'Creating a resource', 'Partially updating a resource'], 0],
+    ['HTTP status codes', 'Which status is appropriate when a requested resource does not exist?', ['404', '201', '204', '304'], 0]
+  ],
+  PostgreSQL: [
+    ['SQL Basics', 'Practical: Which query retrieves every column from users?', ['SELECT * FROM users;', 'GET ALL users;', 'OPEN users;', 'FETCH users.*;'], 0],
+    ['Tables', 'Which SQL statement adds a new row?', ['INSERT INTO', 'ALTER TABLE', 'CREATE INDEX', 'DROP TABLE'], 0],
+    ['Primary Keys', 'Can a primary key contain duplicate values?', ['No', 'Yes, if the column is text', 'Yes, when rows are sorted', 'Only when it is indexed'], 0],
+    ['Foreign Keys', 'What does ON DELETE CASCADE do?', ['Deletes dependent rows when the referenced row is deleted', 'Copies rows into a new table', 'Blocks every delete', 'Encrypts foreign-key values'], 0],
+    ['Relationships', 'Which relationship lets one course have many lessons?', ['One-to-many', 'One-to-one only', 'Many-to-many only', 'No relationship'], 0],
+    ['CRUD', 'Practical: Which clause limits an update to the row with id 7?', ['WHERE id = 7', 'ORDER BY id = 7', 'GROUP BY id = 7', 'HAVING id = 7'], 0],
+    ['Joins', 'Which join returns only rows with matches in both tables?', ['INNER JOIN', 'LEFT JOIN', 'FULL OUTER JOIN', 'CROSS JOIN'], 0],
+    ['Database Design', 'Why split repeating data into related tables?', ['To reduce duplication and improve consistency', 'To make every query return all columns', 'To avoid using keys', 'To store passwords as plain text'], 0],
+    ['Parameterized queries', 'Practical: Why pass user input as a query parameter?', ['It separates data from SQL and helps prevent injection', 'It makes all queries public', 'It disables constraints', 'It skips database authentication'], 0],
+    ['SQL Basics', 'Which clause filters rows in a SELECT query?', ['WHERE', 'ORDER BY', 'FROM ONLY', 'VALUES'], 0],
+    ['CRUD', 'Which SQL command changes existing rows?', ['UPDATE', 'INSERT', 'CREATE', 'GRANT'], 0]
+  ],
+  Authentication: [
+    ['Password storage', 'Practical: What should a login system compare with the submitted password?', ['A stored password hash using a password-hashing verifier', 'A plaintext password in the database', 'A Base64 string', 'A password in a URL'], 0],
+    ['Authentication vs authorization', 'What does authorization determine?', ['What an authenticated user is allowed to do', 'Whether a page uses CSS', 'The user’s email format', 'Which database is installed'], 0],
+    ['JWTs', 'What must a server do before trusting a JWT?', ['Verify its signature and validate relevant claims', 'Decode it and trust its contents', 'Accept any token with three parts', 'Read the user id from the URL'], 0],
+    ['Authorization', 'Practical: Where should ownership of a requested record be checked?', ['On the server before returning or changing it', 'Only in a hidden button', 'In the page stylesheet', 'Only in localStorage'], 0],
+    ['Sessions', 'Why should authentication tokens be protected from script access when possible?', ['To reduce the impact of cross-site scripting theft', 'To make CSS load faster', 'To avoid validating passwords', 'To make tokens public'], 0],
+    ['Password storage', 'Why use a slow password-hashing algorithm?', ['It makes large-scale guessing more costly', 'It lets users recover the original password', 'It removes the need for unique salts', 'It encrypts the browser'], 0],
+    ['Authentication vs authorization', 'Which question does authentication answer?', ['Who is this user?', 'Which action may this user take?', 'What theme is selected?', 'Where is the app hosted?'], 0],
+    ['JWTs', 'What does an expiration claim help limit?', ['How long a token remains valid', 'How many database tables exist', 'The user’s password length', 'The size of a response body'], 0],
+    ['Authorization', 'Practical: A user changes a record ID in a URL. What should the API do?', ['Check permission for that specific record', 'Assume the user owns it', 'Hide the URL field with CSS', 'Return all records'], 0],
+    ['Password reset', 'What is a safer way to store a password-reset token?', ['Store a hash of a random, expiring token', 'Store a permanent plaintext password', 'Use the user email as the token', 'Put the database password in the link'], 0],
+    ['Security', 'Which response is safer when an email address is not registered during password recovery?', ['Use a generic response that does not reveal account existence', 'Say explicitly that no account exists', 'Return the password hash', 'Redirect to the admin page'], 0]
+  ],
+  'Full Stack': [
+    ['Frontend and backend', 'Practical: Where should private database credentials be used?', ['On the backend only', 'In browser JavaScript', 'In a public HTML attribute', 'In the page title'], 0],
+    ['Database integration', 'What role does a backend API play between a frontend and database?', ['It validates requests and performs controlled data operations', 'It makes the database public', 'It replaces all HTML', 'It stores CSS styles'], 0],
+    ['Full-stack architecture', 'Why keep user interface, server logic, and data storage as distinct responsibilities?', ['It makes the system easier to change and secure', 'It guarantees there will be no bugs', 'It removes network requests', 'It prevents use of APIs'], 0],
+    ['Deployment', 'Practical: What is a useful check after deploying a backend?', ['Check its health endpoint and deployment logs', 'Delete the production database', 'Disable HTTPS', 'Commit production secrets'], 0],
+    ['Environment variables', 'Why use different environment settings for local and production?', ['Each environment needs its own URLs and secrets', 'The frontend becomes invisible', 'It removes configuration', 'It shares passwords with users'], 0],
+    ['Security', 'Which input should the server trust by default?', ['None; validate and authorize incoming data', 'Any hidden form value', 'Any user id in a request', 'Only values sent over HTTPS'], 0],
+    ['Connecting frontend to backend', 'Practical: What should a frontend do if an API request fails?', ['Show a useful error state and allow recovery', 'Pretend the request succeeded', 'Display server secrets', 'Delete local user data'], 0],
+    ['Database integration', 'Why should a backend use parameterized database queries?', ['To keep data values separate from query structure', 'To disable database permissions', 'To let users write arbitrary SQL', 'To avoid handling errors'], 0],
+    ['Full-stack architecture', 'What is an API contract?', ['An agreed shape and behavior for requests and responses', 'A hosting invoice', 'A database password', 'A CSS component'], 0],
+    ['Deployment', 'Practical: Where should production secrets be configured?', ['In the host’s protected environment settings', 'In a public repository', 'In frontend localStorage', 'In a committed SQL seed file'], 0],
+    ['Full-stack projects', 'What is a useful first step when a feature spans frontend and backend?', ['Define the user flow and API/data requirements', 'Write random code in every layer', 'Expose the database to the browser', 'Skip validation until production'], 0]
+  ]
+};
+
+for (const [stage, questions] of Object.entries(extraPracticeQuestions)) {
+  practiceQuestionBank[stage].push(...questions.map(([topic, prompt, options, answer]) => ({
+    topic,
+    prompt,
+    options,
+    answer,
+    explanation: `Review ${topic.toLowerCase()} and try applying it in a small example.`,
+    practical: prompt.startsWith('Practical:')
+  })));
+}
 const escapePracticeText = value => String(value).replace(/[&<>"']/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
 }[character]));
@@ -85,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <section class="card practice-picker">
         <div class="practice-picker-copy">
           <h2>Choose a stage to practice</h2>
-          <p class="text-muted">Your current stage is selected. Earlier stages stay available for review.</p>
+          <p class="text-muted">Each trial has 15 questions across the stage topics, including practical scenarios. Your current stage is selected; earlier stages stay available for review.</p>
         </div>
         <label for="practice-stage-select">Learning stage</label>
         <select id="practice-stage-select" class="form-control"></select>
@@ -125,10 +271,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       trialContainer.innerHTML = `
         <form id="practice-trial-form" class="practice-trial-form">
-          <div class="practice-trial-heading"><div><span class="practice-eyebrow">Stage trial</span><h2>${category.name}</h2></div><span class="practice-question-count">${questions.length} questions</span></div>
+          <div class="practice-trial-heading"><div><span class="practice-eyebrow">15-question stage trial</span><h2>${category.name}</h2><p class="text-muted">Includes practical scenarios. Choose the best answer for each.</p></div><span class="practice-question-count">${questions.length} questions</span></div>
           ${questions.map((question, questionIndex) => `
             <fieldset class="practice-question" data-question="${questionIndex}">
-              <legend><span class="practice-question-number">${String(questionIndex + 1).padStart(2, '0')}</span><span><small>${question.topic}</small>${question.prompt}</span></legend>
+              <legend><span class="practice-question-number">${String(questionIndex + 1).padStart(2, '0')}</span><span><small>${question.practical ? 'Practical · ' : ''}${question.topic}</small>${question.prompt.replace(/^Practical: /, '')}</span></legend>
               <div class="practice-options">
                 ${question.options.map((option, optionIndex) => `
                   <label class="practice-option"><input type="radio" name="question-${questionIndex}" value="${optionIndex}"><span>${escapePracticeText(option)}</span></label>
