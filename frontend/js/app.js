@@ -129,14 +129,43 @@ const notificationStorageKey = () => {
   const user = JSON.parse(localStorage.getItem('user') || 'null');
   return `stackgenNotifications:${user?.id || user?.email || 'default'}`;
 };
-const getNotifications = () => JSON.parse(localStorage.getItem(notificationStorageKey()) || '[]');
+const notificationReadLifetime = 30 * 60 * 1000;
+let notificationExpiryTimer;
+const getNotifications = () => {
+  const storageKey = notificationStorageKey();
+  const stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
+  const now = Date.now();
+  let changed = false;
+  const visible = stored.flatMap(note => {
+    if (!note.read) return [note];
+    const readAt = Date.parse(note.readAt);
+    if (!Number.isFinite(readAt)) {
+      changed = true;
+      return [{ ...note, readAt: new Date(now).toISOString() }];
+    }
+    if (now - readAt >= notificationReadLifetime) {
+      changed = true;
+      return [];
+    }
+    return [note];
+  });
+  if (changed) localStorage.setItem(storageKey, JSON.stringify(visible));
+  return visible;
+};
 
 const renderNotifications = () => {
   const button = document.getElementById('notification-toggle');
   const badge = document.getElementById('notification-count');
   const list = document.getElementById('notification-list');
   if (!button || !badge || !list) return;
+  clearTimeout(notificationExpiryTimer);
   const notifications = getNotifications();
+  const nextExpiry = notifications
+    .filter(item => item.read)
+    .map(item => Date.parse(item.readAt) + notificationReadLifetime)
+    .filter(expiry => expiry > Date.now())
+    .sort((a, b) => a - b)[0];
+  if (nextExpiry) notificationExpiryTimer = setTimeout(renderNotifications, nextExpiry - Date.now() + 25);
   const unread = notifications.filter(item => !item.read).length;
   badge.textContent = unread > 99 ? '99+' : String(unread);
   badge.hidden = unread === 0;
@@ -160,7 +189,8 @@ const renderNotifications = () => {
     date.textContent = new Date(note.createdAt).toLocaleString();
     item.append(title, message, date);
     item.addEventListener('click', () => {
-      localStorage.setItem(notificationStorageKey(), JSON.stringify(getNotifications().map(entry => entry.id === note.id ? { ...entry, read: true } : entry)));
+      const readAt = new Date().toISOString();
+      localStorage.setItem(notificationStorageKey(), JSON.stringify(getNotifications().map(entry => entry.id === note.id ? { ...entry, read: true, readAt } : entry)));
       renderNotifications();
     });
     list.appendChild(item);
@@ -308,7 +338,8 @@ const setupSidebar = () => {
       notificationToggle.setAttribute('aria-expanded', String(!notificationPopover.hidden));
     });
     document.getElementById('notification-read-all').addEventListener('click', () => {
-      localStorage.setItem(notificationStorageKey(), JSON.stringify(getNotifications().map(item => ({ ...item, read: true }))));
+      const readAt = new Date().toISOString();
+      localStorage.setItem(notificationStorageKey(), JSON.stringify(getNotifications().map(item => ({ ...item, read: true, readAt: item.readAt || readAt }))));
       renderNotifications();
     });
     document.addEventListener('click', event => {
