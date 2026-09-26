@@ -3,18 +3,19 @@ const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const auth = require('../middleware/auth');
 const multer = require('multer');
-const path = require('path');
-
-// Configure multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../../frontend/uploads'));
-  },
-  filename: (req, file, cb) => {
-    cb(null, 'avatar-' + req.user.id + '-' + Date.now() + path.extname(file.originalname));
+// Keep uploads in memory; the controller saves them to durable database storage.
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 2 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype)) {
+      const error = new Error('Upload a JPEG, PNG, or WebP image (maximum 2 MB).');
+      error.status = 400;
+      return cb(error);
+    }
+    cb(null, true);
   }
 });
-const upload = multer({ storage: storage });
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);

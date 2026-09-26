@@ -3,6 +3,15 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const db = require('../db');
 
+const profilePictureUrl = (user) => {
+  if (!user) return null;
+  if (user.profile_picture_data) {
+    const contentType = user.profile_picture_content_type || 'image/jpeg';
+    return `data:${contentType};base64,${user.profile_picture_data.toString('base64')}`;
+  }
+  return user.profile_picture || null;
+};
+
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -93,7 +102,7 @@ exports.login = async (req, res) => {
       { expiresIn: '5 days' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token, user: { id: user.id, name: user.name, email: user.email, profile_picture: user.profile_picture, phone: user.phone, address: user.address, bio: user.bio } });
+        res.json({ token, user: { id: user.id, name: user.name, email: user.email, profile_picture: profilePictureUrl(user), phone: user.phone, address: user.address, bio: user.bio } });
       }
     );
   } catch (err) {
@@ -104,8 +113,11 @@ exports.login = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-    const userResult = await db.query('SELECT id, name, email, created_at, profile_picture, phone, address, bio, date_of_birth FROM users WHERE id = $1', [req.user.id]);
-    res.json(userResult.rows[0]);
+    const userResult = await db.query('SELECT id, name, email, created_at, profile_picture, profile_picture_data, profile_picture_content_type, phone, address, bio, date_of_birth FROM users WHERE id = $1', [req.user.id]);
+    const user = userResult.rows[0];
+    if (!user) return res.status(404).json({ msg: 'User not found' });
+    const { profile_picture_data, profile_picture_content_type, ...publicUser } = user;
+    res.json({ ...publicUser, profile_picture: profilePictureUrl(user) });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error' });
@@ -118,12 +130,24 @@ exports.uploadProfilePicture = async (req, res) => {
       return res.status(400).json({ msg: 'No file uploaded' });
     }
     
-    // The file is saved by multer in frontend/uploads. We store the relative URL.
-    const fileUrl = `/uploads/${req.file.filename}`;
-    
-    await db.query('UPDATE users SET profile_picture = $1 WHERE id = $2', [fileUrl, req.user.id]);
-    
-    res.json({ msg: 'Profile picture updated', profile_picture: fileUrl });
+    const { buffer, mimetype } = req.file;
+    const imageType = buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff
+      ? 'image/jpeg'
+      : buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+        ? 'image/png'
+        : buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP'
+          ? 'image/webp'
+          : null;
+    if (!imageType || imageType !== mimetype) {
+      return res.status(400).json({ msg: 'Upload a valid JPEG, PNG, or WebP image.' });
+    }
+
+    await db.query(
+      'UPDATE users SET profile_picture_data = $1, profile_picture_content_type = $2, profile_picture = NULL WHERE id = $3',
+      [buffer, imageType, req.user.id]
+    );
+
+    res.json({ msg: 'Profile picture updated', profile_picture: `data:${imageType};base64,${buffer.toString('base64')}` });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error' });
@@ -142,12 +166,13 @@ exports.updateProfile = async (req, res) => {
     }
 
     const result = await db.query(
-      'UPDATE users SET name = COALESCE($1, name), email = COALESCE($2, email), phone = $3, address = $4, bio = $5, date_of_birth = $6 WHERE id = $7 RETURNING id, name, email, profile_picture, phone, address, bio, date_of_birth',
+      'UPDATE users SET name = COALESCE($1, name), email = COALESCE($2, email), phone = $3, address = $4, bio = $5, date_of_birth = $6 WHERE id = $7 RETURNING id, name, email, profile_picture, profile_picture_data, profile_picture_content_type, phone, address, bio, date_of_birth',
       [name, email, phone || null, address || null, bio || null, date_of_birth || null, req.user.id]
     );
 
     const updatedUser = result.rows[0];
-    res.json({ msg: 'Profile updated successfully', user: updatedUser });
+    const { profile_picture_data, profile_picture_content_type, ...publicUser } = updatedUser;
+    res.json({ msg: 'Profile updated successfully', user: { ...publicUser, profile_picture: profilePictureUrl(updatedUser) } });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error' });

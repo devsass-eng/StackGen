@@ -20,6 +20,8 @@ async function initializeDatabase() {
       ALTER TABLE users
         ADD COLUMN IF NOT EXISTS auth_version INTEGER NOT NULL DEFAULT 0,
         ADD COLUMN IF NOT EXISTS profile_picture VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS profile_picture_data BYTEA,
+        ADD COLUMN IF NOT EXISTS profile_picture_content_type VARCHAR(100),
         ADD COLUMN IF NOT EXISTS phone VARCHAR(50),
         ADD COLUMN IF NOT EXISTS address TEXT,
         ADD COLUMN IF NOT EXISTS bio TEXT,

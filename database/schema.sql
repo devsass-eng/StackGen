@@ -6,6 +6,13 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     auth_version INTEGER NOT NULL DEFAULT 0,
+    profile_picture VARCHAR(255),
+    profile_picture_data BYTEA,
+    profile_picture_content_type VARCHAR(100),
+    phone VARCHAR(50),
+    address TEXT,
+    bio TEXT,
+    date_of_birth DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
