@@ -46,16 +46,21 @@
           <p>Search lessons by topic, course, or keyword.</p>
         </div>
       </div>
-      <div class="lesson-search-controls">
-        <svg class="lesson-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <circle cx="10.8" cy="10.8" r="6.8"></circle>
-          <path d="m16 16 4.5 4.5"></path>
-        </svg>
-        <input id="lesson-search-input" type="search" placeholder="Try “JavaScript”, “APIs”, or “databases”" autocomplete="off">
-        <button id="lesson-search-clear" class="lesson-search-clear" type="button" aria-label="Clear search" title="Clear search" hidden>
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"></path></svg>
-        </button>
-      </div>
+      <form id="lesson-search-form" class="lesson-search-form">
+        <div class="lesson-search-controls">
+          <div class="lesson-search-field">
+            <svg class="lesson-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="10.8" cy="10.8" r="6.8"></circle>
+              <path d="m16 16 4.5 4.5"></path>
+            </svg>
+            <input id="lesson-search-input" type="search" placeholder="Try “JavaScript”, “APIs”, or “databases”" autocomplete="off">
+            <button id="lesson-search-clear" class="lesson-search-clear" type="button" aria-label="Clear search" title="Clear search" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+            </button>
+          </div>
+          <button class="lesson-search-submit" type="submit">Search</button>
+        </div>
+      </form>
       <div class="lesson-search-meta">
         <span id="lesson-search-status" aria-live="polite">Search all lessons by topic or keyword.</span>
         <span class="lesson-search-hint" aria-hidden="true">LIVE SEARCH</span>

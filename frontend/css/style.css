@@ -344,17 +344,25 @@ html[data-text-size="large"] body { font-size: 1.08rem; }
 }
 .lesson-search-heading label { display: block; margin-bottom: 0.25rem; font-size: 1.25rem; font-weight: 700; }
 .lesson-search-heading p { color: var(--text-muted); font-size: 0.92rem; }
+.lesson-search-form { margin: 0; }
 .lesson-search-controls {
-  position: relative;
   display: flex;
   align-items: center;
+  gap: 0.65rem;
+}
+.lesson-search-field {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
   min-height: 54px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   background: var(--bg-dark);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.lesson-search-controls:focus-within {
+.lesson-search-field:focus-within {
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 20%, transparent);
 }
@@ -370,6 +378,7 @@ html[data-text-size="large"] body { font-size: 1.08rem; }
 }
 .lesson-search-controls input {
   width: 100%;
+  flex: 1 1 auto;
   min-width: 0;
   padding: 0.9rem 3rem;
   border: 0;
@@ -397,6 +406,25 @@ html[data-text-size="large"] body { font-size: 1.08rem; }
 .lesson-search-clear:hover { color: var(--text-main); background: var(--bg-hover); }
 .lesson-search-clear[hidden] { display: none; }
 .lesson-search-clear svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.lesson-search-submit {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 0 1.25rem;
+  border: 1px solid var(--accent-primary);
+  border-radius: 10px;
+  color: #fff;
+  background: var(--accent-primary);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.lesson-search-submit:hover { border-color: var(--accent-hover); background: var(--accent-hover); }
+.lesson-search-submit:active { transform: translateY(1px); }
+.lesson-search-submit:focus-visible { outline: 2px solid var(--text-main); outline-offset: 3px; }
 .lesson-search-meta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.85rem; }
 .lesson-search-meta > span:first-child { color: var(--text-muted); font-size: 0.88rem; }
 .lesson-search-hint { color: var(--text-muted); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; }
@@ -405,8 +433,10 @@ html[data-text-size="large"] body { font-size: 1.08rem; }
 @media (max-width: 480px) {
   .lesson-search { border-radius: 12px; }
   .lesson-search-heading label { font-size: 1.1rem; }
-  .lesson-search-controls { min-height: 50px; }
+  .lesson-search-controls { gap: 0.5rem; }
+  .lesson-search-field, .lesson-search-submit { min-height: 50px; }
   .lesson-search-controls input { padding: 0.8rem 2.8rem; font-size: 0.94rem; }
+  .lesson-search-submit { padding-inline: 0.9rem; }
   .lesson-search-meta { gap: 0.5rem; }
 }
 .form-control {

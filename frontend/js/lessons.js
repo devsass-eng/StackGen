@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const categories = await fetchAPI('/lessons');
       const container = document.getElementById('lessons-container');
+      const searchForm = document.getElementById('lesson-search-form');
       const searchInput = document.getElementById('lesson-search-input');
       const clearButton = document.getElementById('lesson-search-clear');
       const searchStatus = document.getElementById('lesson-search-status');
@@ -54,6 +55,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).join('');
       };
 
+      searchForm.addEventListener('submit', event => {
+        event.preventDefault();
+        renderLessons();
+      });
       searchInput.addEventListener('input', renderLessons);
       clearButton.addEventListener('click', () => {
         searchInput.value = '';
