@@ -11,7 +11,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   const loadLessonDetails = async () => {
     try {
-      const lesson = await fetchAPI(`/lessons/${lessonId}`);
+      const lesson = localStorage.getItem('token')
+        ? await fetchAPI(`/lessons/${lessonId}`)
+        : (await window.getOfflineCurriculum()).lessons.find(item => String(item.id) === lessonId);
+      if (!lesson) throw new Error('Lesson not found.');
       const container = document.getElementById('lesson-container');
       
       let html = `
@@ -34,8 +37,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
       }
       
-      // Action panel for marking as complete
-      html += `
+      // Progress is available only to signed-in users and requires a connection.
+      if (localStorage.getItem('token')) html += `
         <div class="action-panel">
           <h3 style="margin-bottom: 1rem;">Have you mastered this topic?</h3>
           <div style="display: flex; gap: 1rem; justify-content: center;">
@@ -48,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
         </div>
       `;
+      else html += '<div class="action-panel"><p>Lessons are available offline. Sign in while online to track your progress.</p></div>';
       
       // Navigation
       html += `<div class="nav-buttons">`;
@@ -89,5 +93,6 @@ window.updateStatus = async (lessonId, status) => {
     window.location.reload();
   } catch (err) {
     console.error('Error updating status:', err);
+    alert(err.message || 'Progress could not be saved. Reconnect and try again.');
   }
 };

@@ -89,5 +89,6 @@ window.updateStatus = async (lessonId, status) => {
     window.location.reload();
   } catch (err) {
     console.error('Error updating status:', err);
+    alert(err.message || 'Progress could not be saved. Reconnect and try again.');
   }
 };

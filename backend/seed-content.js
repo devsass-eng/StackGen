@@ -1715,4 +1715,6 @@ async function seedContent() {
   }
 }
 
-seedContent();
+if (require.main === module) seedContent();
+
+module.exports = lessons;

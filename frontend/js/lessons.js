@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   const loadLessons = async () => {
     try {
-      const categories = await fetchAPI('/lessons');
+      const categories = localStorage.getItem('token')
+        ? await fetchAPI('/lessons')
+        : (await window.getOfflineCurriculum()).categories;
       const container = document.getElementById('lessons-container');
       const searchForm = document.getElementById('lesson-search-form');
       const searchInput = document.getElementById('lesson-search-input');
@@ -66,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         searchInput.focus();
       });
       renderLessons();
-      
+
     } catch (err) {
       console.error('Error loading lessons:', err);
     }

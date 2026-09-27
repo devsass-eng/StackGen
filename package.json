@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node backend/server.js",
     "start:deploy": "node backend/init-db.js && node backend/server.js",
-    "db:init": "node backend/init-db.js"
+    "db:init": "node backend/init-db.js",
+    "curriculum:export": "node backend/export-offline-curriculum.js"
   },
   "keywords": [],
   "author": "",
